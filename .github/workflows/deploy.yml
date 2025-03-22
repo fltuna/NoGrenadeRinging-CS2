@@ -51,9 +51,9 @@ jobs:
       - name: Create release artifacts
         run: |
           mkdir artifacts
-          mkdir artifacts\plugins\NativeVote\
+          mkdir artifacts\plugins\NoGrenadeRinging\
           mkdir artifacts\gamedata\
-          Copy-Item -Path "NoGrenadeRinging\bin\Release\*\NoGrenadeRinging.dll" -Destination "artifacts\shared\NoGrenadeRinging\NoGrenadeRinging.dll" -Force
+          Copy-Item -Path "NoGrenadeRinging\bin\Release\*\NoGrenadeRinging.dll" -Destination "artifacts\plugins\NoGrenadeRinging\NoGrenadeRinging.dll" -Force
           Copy-Item -Path "gamedata\NoGrenadeRinging.json" -Destination "artifacts\gamedata\NoGrenadeRinging.json" -Force
 
       - name: Compress artifacts
