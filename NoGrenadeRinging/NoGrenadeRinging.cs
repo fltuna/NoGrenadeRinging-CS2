@@ -5,7 +5,7 @@ namespace NoGrenadeRinging;
 
 public class NoGrenadeRinging: BasePlugin
 {
-    public override string ModuleName => "NoGreanadeRinging";
+    public override string ModuleName => "NoGrenadeRinging";
     public override string ModuleVersion => "0.0.1";
     public override string ModuleAuthor => "faketuna";
     
