@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Core;
+﻿using System.Runtime.InteropServices;
+using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
 
 namespace NoGrenadeRinging;
@@ -6,7 +7,7 @@ namespace NoGrenadeRinging;
 public class NoGrenadeRinging: BasePlugin
 {
     public override string ModuleName => "NoGrenadeRinging";
-    public override string ModuleVersion => "0.0.1";
+    public override string ModuleVersion => "0.1.0";
     public override string ModuleAuthor => "faketuna";
     
     
@@ -17,12 +18,12 @@ public class NoGrenadeRinging: BasePlugin
     // 2. Identify a function with 2 parameters
     // 3. Make sig of this function
     // 
-    private MemoryFunctionVoid<IntPtr, long> DeafenHook = new(GameData.GetSignature("GrenadeDeafen"));
+    private MemoryFunctionVoid<CBasePlayerPawn, CSound> DeafenHook = new(GameData.GetSignature("GrenadeDeafen"));
     
     
     public override void Load(bool hotReload)
     {
-        DeafenHook.Hook(DeafHook, HookMode.Pre);;
+        DeafenHook.Hook(DeafHook, HookMode.Pre);
     }
 
     public override void Unload(bool hotReload)
@@ -32,6 +33,13 @@ public class NoGrenadeRinging: BasePlugin
 
     private HookResult DeafHook(DynamicHook hook)
     {
-        return HookResult.Handled;
+        var param2 = hook.GetParam<CSound>(1);
+
+        // If sound volume is lower than 29, then grenade deafen effect will not apply.
+        if (param2.Volume <= 29) return HookResult.Continue;
+        
+        // If sound volume is higher than 30, then set value to 29 to prevent applying the grenade deafen effect.
+        Marshal.WriteInt32(param2.Handle + 0xc, 0x1d);
+        return HookResult.Continue;
     }
 }
