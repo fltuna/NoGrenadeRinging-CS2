@@ -1,7 +1,7 @@
 {
     "GrenadeDeafen" : {
         "signatures" : {
-            "windows" : "4C 8B DC 49 89 5B ? 55 49 8D AB"
+            "windows" : "40 53 48 81 EC 10 01 00 00 48 8B 05"
         }
     }
 }
