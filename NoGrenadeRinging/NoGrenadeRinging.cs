@@ -7,7 +7,7 @@ namespace NoGrenadeRinging;
 public class NoGrenadeRinging: BasePlugin
 {
     public override string ModuleName => "NoGrenadeRinging";
-    public override string ModuleVersion => "0.1.0";
+    public override string ModuleVersion => "0.1.1";
     public override string ModuleAuthor => "faketuna";
     
     
@@ -18,7 +18,7 @@ public class NoGrenadeRinging: BasePlugin
     // 2. Identify a function with 2 parameters
     // 3. Make sig of this function
     // 
-    private MemoryFunctionVoid<CBasePlayerPawn, CSound> DeafenHook = new(GameData.GetSignature("GrenadeDeafen"));
+    private MemoryFunctionVoid<CBasePlayerPawn, IntPtr> DeafenHook = new(GameData.GetSignature("GrenadeDeafen"));
     
     
     public override void Load(bool hotReload)
@@ -33,13 +33,13 @@ public class NoGrenadeRinging: BasePlugin
 
     private HookResult DeafHook(DynamicHook hook)
     {
-        var param2 = hook.GetParam<CSound>(1);
+        var param2 = hook.GetParam<IntPtr>(1);
 
         // If sound volume is lower than 29, then grenade deafen effect will not apply.
-        if (param2.Volume <= 29) return HookResult.Continue;
+        if (param2 + 0xc <= 0x1d) return HookResult.Continue;
         
         // If sound volume is higher than 30, then set value to 29 to prevent applying the grenade deafen effect.
-        Marshal.WriteInt32(param2.Handle + 0xc, 0x1d);
+        Marshal.WriteInt32(param2 + 0xc, 0x1d);
         return HookResult.Continue;
     }
 }
